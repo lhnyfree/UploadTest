@@ -1,0 +1,62 @@
+CREATE TABLE student (
+ id INT, -- 编号
+ NAME VARCHAR(20), -- 姓名
+ age INT, -- 年龄
+ sex VARCHAR(5), -- 性别
+ address VARCHAR(100), -- 地址
+ math INT, -- 数学
+ english INT -- 英语
+);
+
+INSERT INTO student(id,NAME,age,sex,address,math,english) VALUES (1,'马云',55,'男','
+杭州',66,78),(2,'马化腾',45,'女','深圳',98,87),(3,'马景涛',55,'男','香港',56,77),(4,'柳岩
+',20,'女','湖南',76,65),(5,'柳青',20,'男','湖南',86,NULL),(6,'刘德华',57,'男','香港',99,99),(7,'马德',22,'女','香港',99,99),(8,'德玛西亚',18,'男','南京',56,65);
+
+DROP TABLE student;
+
+SELECT * FROM student;
+
+-- 查询 姓名 和 年龄
+SELECT NAME,age FROM student;     -- 根据前面的字段进行查询
+SELECT * FROM student;            -- 查询所有字段名查询，*号代替
+-- 推荐用上面的多字段条件查询，便于阅读
+
+-- 标准书写格式：(这样也更好加注释阅读)
+/*
+  SELECT
+         NAME,    --姓名
+         age      --年龄
+  FROM
+         student; --学生表
+*/
+
+
+SELECT address FROM student;   -- 这样查会出现重复的字段
+
+SELECT DISTINCT address FROM student;  -- 用DISTINCT关键字，可以去除重复的结果集
+#因为前面插入的数据有问题，所以这里查询之后还是有重复的东西，因为讲义里的一些数据带空格
+#把表重新删了再重新导入 DROP TABLE student;
+
+SELECT NAME ,address FROM student;  
+SELECT DISTINCT NAME ,address FROM student;  
+#查询人和地址，像这样就没法去重，因为查询出来的结果集里有区别，查询出来的结果集内容完全一样的才能去
+#这里指的是查询出的结果集，完全一致，而不是原始数据
+
+-- 计算math和english的分数之和
+SELECT NAME,math,english,math+english FROM student; -- 后面添加上2个数据中间加上加号
+#这里柳青这个数据因为有一门是null，所以出来的相加结果是null
+
+
+-- 如果有null参与的计算，计算结果都为null
+#所以可以用函数来解决这个问题，用IFNULL函数可以判断
+SELECT NAME,math,english,math+IFNULL(english,0) FROM student;
+#它有2个表达式(类似参数列表)，一个是你要判断的字段，
+#如果这个字段为null的话，那么就用第2个参数替换,这里用0替换，可以就能算出结果了
+
+-- 给查询出来的结果集，起名，而不是长串表达式在上面
+SELECT NAME,math,english,math+IFNULL(english,0) AS 总分 FROM student;
+#这里用AS函数后面跟你要起的标题名。不写AS也行，但是要有空格间隔
+SELECT NAME,math,english,math+IFNULL(english,0) 总分 FROM student;  -- 这里效果和上面一样
+
+-- 给查询的字段加上结果集的名字标题也行，但是要用空格，然后在后面写上
+SELECT NAME 姓名,math 数学,english 英语,math+IFNULL(english,0) 总分 FROM student;
